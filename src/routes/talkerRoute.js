@@ -1,8 +1,32 @@
 const { Router } = require('express');
 const { addNewTalker } = require('../utils/addNewTalker');
+const { getAllTalkers } = require('../utils/getAllTalkers');
+const {
+    validateToken,
+    valitadeName,
+    valitadeNameSize,
+    validateAge,
+    validateAgeValue,
+    validateTalk,
+    validateWatchedAt,
+    validateWatchedAtValue,
+    validateRate,
+    validateRateValue,
+} = require('../middlewares/talkerValidates');
 
 const talkerRoute = Router();
-const { getAllTalkers } = require('../utils/getAllTalkers');
+const validate = [
+  validateToken,
+  valitadeName,
+  valitadeNameSize,
+  validateAge,
+  validateAgeValue,
+  validateTalk,
+  validateWatchedAt,
+  validateWatchedAtValue,
+  validateRate,
+  validateRateValue,
+];
 
 talkerRoute.get('/', async (_req, res) => {
   try {
@@ -30,7 +54,7 @@ talkerRoute.get('/:id', async (req, res) => {
   }
 });
 
-talkerRoute.post('/', async (req, res) => {
+talkerRoute.post('/', ...validate, async (req, res) => {
   try {
     const { name, age, talk: { watchedAt, rate } } = req.body;
     const data = await getAllTalkers();

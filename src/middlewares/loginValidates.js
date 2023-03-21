@@ -1,47 +1,24 @@
-const validateName = (req, res, next) => {
-  const { email } = req.body;
+const validateLogin = (req, res, next) => {
+  const regex = /\S+@\S+\.\S+/;
+  const { email, password } = req.body;
   if (!email) {
       return res.status(400).json({
-          message: 'O campo "email" é obrigatório',
-          });
+          message: 'O campo "email" é obrigatório' });
   }
-  return next();
-};
-
-const validateEmail = (req, res, next) => {
-  const { email } = req.body;
-  const regex = /\S+@\S+\.\S+/;
   if (!regex.test(email)) {
-      return res.status(400).json({ message: 'O "email" deve ter o formato "email@email.com"',
-  });
+      return res.status(400).json({ message: 'O "email" deve ter o formato "email@email.com"' });
   } 
-  return next();
-};
-
-const validatePassword = (req, res, next) => {
-  const { password } = req.body;
   if (!password) {
       return res.status(400).json({
-          message: 'O campo "password" é obrigatório',
-          });
+          message: 'O campo "password" é obrigatório' });
   }
-  return next();
-};
-
-const validatePasswordSize = (req, res, next) => {
-  const { password } = req.body;
-  const magicNumber = 6;
-  if (password.length < magicNumber) {
+  if (password.length < 6) {
       return res.status(400).json({
-          message: 'O "password" deve ter pelo menos 6 caracteres',
-          });
+          message: 'O "password" deve ter pelo menos 6 caracteres' });
   }
-  return next();
+  next();
 };
 
 module.exports = {
-  validateName,
-  validateEmail,
-  validatePassword,
-  validatePasswordSize,
+  validateLogin,
 };
