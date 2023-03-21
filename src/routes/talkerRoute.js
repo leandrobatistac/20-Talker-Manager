@@ -14,6 +14,7 @@ const {
     validateRateValue,
 } = require('../middlewares/talkerValidates');
 const { updateTalkers } = require('../utils/updateTalkers');
+const { deleteTalker } = require('../utils/deleteTalker');
 
 const talkerRoute = Router();
 const validate = [
@@ -80,6 +81,16 @@ talkerRoute.put('/:id', ...validate, async (req, res) => {
     if (!editedTalker) {
       return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
     } return res.status(200).json(editedTalker);
+  } catch (e) {
+      res.status(500).send({ message: `error: ${e}` });
+  }
+});
+
+talkerRoute.delete('/:id', validateToken, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const editedTalker = await deleteTalker(+id);
+    return res.status(204).json(editedTalker);
   } catch (e) {
       res.status(500).send({ message: `error: ${e}` });
   }
