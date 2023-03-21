@@ -13,6 +13,7 @@ const {
     validateRate,
     validateRateValue,
 } = require('../middlewares/talkerValidates');
+const { updateTalkers } = require('../utils/updateTalkers');
 
 const talkerRoute = Router();
 const validate = [
@@ -66,6 +67,19 @@ talkerRoute.post('/', ...validate, async (req, res) => {
     };
     await addNewTalker(newTalker);
     return res.status(201).json(newTalker);
+  } catch (e) {
+      res.status(500).send({ message: `error: ${e}` });
+  }
+});
+
+talkerRoute.put('/:id', ...validate, async (req, res) => {
+  try {
+    const talker = req.body;
+    const { id } = req.params;
+    const editedTalker = await updateTalkers(talker, +id);
+    if (!editedTalker) {
+      return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
+    } return res.status(200).json(editedTalker);
   } catch (e) {
       res.status(500).send({ message: `error: ${e}` });
   }
