@@ -15,4 +15,21 @@ talkerRoute.get('/', async (_req, res) => {
   }
 });
 
+talkerRoute.get('/:id', async (req, res) => {
+  try {
+    const data = await readJson(talkerPath);
+    const { id } = req.params;
+    const filteredData = data.find((talker) => talker.id === +id);
+    if (!filteredData) { 
+      res.status(404).json({
+        message: 'Pessoa palestrante não encontrada',
+      });
+    } else {
+      res.status(200).json(filteredData);
+    }
+  } catch (e) {
+    res.status(500).send({ message: `error: ${e}` });
+  }
+});
+
 module.exports = talkerRoute;
